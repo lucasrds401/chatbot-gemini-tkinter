@@ -5,18 +5,18 @@ from google import genai
 
 load_dotenv()
 
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY") #Chave da API////
 
 client = genai.Client(api_key=GEMINI_API_KEY)
 
-def user(question):
+def user(question): #Função para "chamar" a IA////
         response = client.models.generate_content(
         model="gemini-3-flash-preview",
         contents= question)
 
         return response.text
 
-def open_two_page():
+def open_two_page(): #Segunda página////
     global windows_two, camp
 
     windows_one.withdraw()
@@ -32,7 +32,7 @@ def open_two_page():
 
     tk.Button(windows_two, text="Enviar", command=open_three_page).pack(padx=10, pady=10)
 
-def open_three_page():
+def open_three_page(): #Terceira página////
       global windows_three
 
       question = camp.get()
