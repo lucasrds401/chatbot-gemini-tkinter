@@ -1,64 +1,78 @@
-import tkinter as tk
+import customtkinter as ctk
 import os
 from dotenv import load_dotenv
 from google import genai
 
 load_dotenv()
 
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY") #Chave da API////
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY") 
 
-client = genai.Client(api_key=GEMINI_API_KEY)
+client = genai.Client(api_key=GEMINI_API_KEY) #API KEY
 
-def user(question): #Função para "chamar" a IA////
-        response = client.models.generate_content(
-        model="gemini-3-flash-preview",
-        contents= question)
+ctk.set_appearance_mode("dark") #Configuração de tema(dark)
 
-        return response.text
+def user(question): #Função para "Chamar a API"
+    response = client.models.generate_content(
+        model="models/gemini-2.5-flash",
+        contents=question)
+    
+    return response.text
 
-def open_two_page(): #Segunda página////
+
+def open_two_page(): #Página de pergunta do ChatBot
     global windows_two, camp
 
     windows_one.withdraw()
 
-    windows_two = tk.Toplevel()
+    windows_two = ctk.CTkToplevel()
     windows_two.title("CHATBOT")
     windows_two.geometry("400x200")
 
-    tk.Label(windows_two, text= "Faça seu questionamento:").pack()
+    ctk.CTkLabel(windows_two, text="Faça seu questionamento:").pack(pady=10)
 
-    camp = tk.Entry(windows_two, width=40)
-    camp.pack()
+    camp = ctk.CTkEntry(windows_two, width=250)
+    camp.pack(pady=10)
 
-    tk.Button(windows_two, text="Enviar", command=open_three_page).pack(padx=10, pady=10)
+    ctk.CTkButton(windows_two,text="Enviar",command=open_three_page).pack(pady=10) #Botão de enviar
 
-def open_three_page(): #Terceira página////
-      global windows_three
 
-      question = camp.get()
-      resposta = user(question)
+def open_three_page(): #Página do ChatBot
+    global windows_three
 
-      windows_two.withdraw()
+    question = camp.get()
+    resposta = user(question)
 
-      windows_three = tk.Toplevel()
-      windows_three.title("CHATBOT")
-      windows_three.geometry("800x400")
+    windows_two.withdraw()
 
-      tk.Label(windows_three, text=resposta, wraplength=700).pack(pady=20)
+    windows_three = ctk.CTkToplevel()
+    windows_three.title("CHATBOT")
+    windows_three.geometry("800x400")
 
-#PROGRAMA////
-    
-windows_one = tk.Tk()
+    ctk.CTkLabel(
+        windows_three,
+        text=resposta,
+        wraplength=700
+    ).pack(pady=20)
 
+
+# PROGRAMA
+
+windows_one = ctk.CTk()
 windows_one.title("Cadastro")
 windows_one.geometry("300x200")
 
-tk.Label(windows_one, text= "Nome").pack()
-one_campo = tk.Entry(windows_one).pack()
+ctk.CTkLabel(windows_one, text="Nome").pack(pady=5)
+one_campo = ctk.CTkEntry(windows_one)
+one_campo.pack()
 
-tk.Label(windows_one, text= "Senha").pack()
-two_campo = tk.Entry(windows_one, show= "*").pack()
+ctk.CTkLabel(windows_one, text="Senha").pack(pady=5)
+two_campo = ctk.CTkEntry(windows_one, show="*")
+two_campo.pack()
 
-button = tk.Button(windows_one,  text="Enviar", command=open_two_page).pack(padx=10, pady=10)
+ctk.CTkButton(
+    windows_one,
+    text="Enviar",
+    command=open_two_page
+).pack(pady=10)
 
 windows_one.mainloop()
